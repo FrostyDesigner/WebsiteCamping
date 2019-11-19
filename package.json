@@ -1,7 +1,8 @@
 {
   "name": "nucamp",
   "version": "1.0.0",
-  "description": "This is a website for the fictional campsites review site NuCamp.",  "main": "index.html",
+  "description": "This is a website for the fictional campsites review site NuCamp.",
+  "main": "index.html",
   "scripts": {
     "lite": "lite-server",
     "start": "npm run lite",
@@ -16,5 +17,13 @@
     "bootstrap": "^4.0.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.12.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrostyDesigner/nucampsite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FrostyDesigner/nucampsite/issues"
+  },
+  "homepage": "https://github.com/FrostyDesigner/nucampsite#readme"
 }
