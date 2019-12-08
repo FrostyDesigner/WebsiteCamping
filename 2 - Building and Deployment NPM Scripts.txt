@@ -1,0 +1,119 @@
+Building and Deployment: NPM Scripts
+
+Instructions
+Copy Font-Awesome Fonts
+
+    Your project uses Font-Awesome fonts. These need to be copied to the distribution folder. To help us do this, install the copyfiles NPM module globally as follows (you may need to use sudo on MacOS and Linux):
+
+npm install --save-dev copyfiles@2.0.0
+
+    Then add the following script in package.json within the scripts object:
+
+. . .
+    "copyfonts": "copyfiles -f node_modules/font-awesome/fonts/* dist/fonts",
+. . .
+
+     You can assume that all scripts you are asked to add in this section will be added to the scripts object in package.json. The order that they are added in does not technically matter; you may choose to alphabetize them, or order them by type, or not concern yourself with an order at all. Just make sure that they all have a comma at the end of each script, except for the final one.
+
+
+Compress and Minify Images
+
+    We will use the imagemin-cli NPM module to compress images to a smaller size without loss of quality. Install the module as follows (you may need to use sudo on MacOS and Linux):
+
+npm install --save-dev imagemin-cli@3.0.0
+
+    NOTE: Some MacOS students have encountered issues with imagemin-cli not installing its plugins due to issues with global permissions on MacOS. If this happens, try:
+
+sudo npm install imagemin-cli@3.0.0 --save-dev --unsafe-perm=true --allow-root
+
+    Then add the following script:
+
+. . .
+   "imagemin": "imagemin img/* -o dist/img",
+. . .
+
+
+Concatenate, minify, and uglify 
+
+    Install the usemin-cli npm module as below:
+
+npm install --save-dev usemin-cli@0.5.1  
+
+    This module will automatically install the usemin module, and the usemin module will automatically install a CSS minifier module named clean-css, a JavaScript minifier and uglifier module named uglify-js, and an HTML minification module named html-minifier.
+    Add the following script below. It will tell usemin to process the HTML files specified, and it will automatically also run the CSS and JavaScript minifying and uglifying processes on any linked .css/.js files:
+
+. . .
+   "usemin": "usemin contactus.html -d dist --htmlmin -o dist/contactus.html && usemin aboutus.html -d dist --htmlmin -o dist/aboutus.html && usemin index.html -d dist --htmlmin -o dist/index.html",
+. . .
+
+    Now open index.html and surround all the css links code in the <head> as follows, with the build:css and endbuild comments:
+
+. . .
+    <!-- build:css css/main.css -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="node_modules/bootstrap-social/bootstrap-social.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- endbuild -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" />
+. . .
+
+    Notice that we've pulled the Google fonts list out to after the endbuild comment, since it's not a local file.
+    Do the same in aboutus.html and contactus.html.
+    Similarly, open index.html and surround the js script code as follows:
+
+. . .
+    <!-- build:js js/main.js -->
+    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <!-- endbuild -->
+. . .
+
+    Add this change to aboutus.html and contactus.html as well.
+
+
+Automate Dist Folder Cleanup
+
+    Install the rimraf npm module by typing the following at the prompt:
+
+npm install --save-dev rimraf@2.6.2
+
+    Then, set up the following script:
+
+    "clean": "rimraf dist",
+
+    This utility simply deletes the dist folder, if it exists, and all files in it, effectively "cleaning" it. 
+
+
+Build the distribution folder
+
+    Also add this script, which strings together commands to run a folder cleaning utility (which we'll add later), to run the copyfonts script, and to run the usemin script. 
+
+. . .
+    "build": "npm run clean && npm run imagemin && npm run copyfonts && npm run usemin",
+. . .
+
+    Finally, to build the distribution folder, type the following at the prompt:
+
+npm run build
+
+    This will create the dist folder containing the files that are a self-contained version of your project. 
+    Take a moment to look around the contents of the dist folder and see what's inside. Especially notice that all your local CSS and JavaScript files have been merged into a single file, and if you look inside them, you can see that they have been optimized for deployment. 
+    If you have a web server that hosts your website, you can now copy the contents of this folder to it and view your work online.
+
+
+Optional: Git
+
+    Open your .gitignore file in your editor and update it so that it reads as follows, preventing the "dist" folder from being added to the git repository:
+
+    node_modules
+    dist
+
+    Commit all the changes to your local repository with the message "NPM Scripts Part 2". Push the commit to your remote repository.
+
+
+Summary
+
+    In this exercise, you learned how to install and use various NPM modules in the scripts section of your package.json file to automate numerous processes that prepare your files for distribution, including image compression, code minification, uglification, and more. 
